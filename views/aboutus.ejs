@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>About Us</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <input name="username" id="username">
+    <input name="password" id="password">
+    <button id="submit">submit</button>
+    <script>
+      var username = "";
+      var password = "";
+
+      var usernameInput = document.getElementById("username")
+      usernameInput.addEventListener('change', function(e){
+        username = e.target.value;
+        console.log(username);
+      });
+
+      var passwordInput = document.getElementById("password");
+      passwordInput.addEventListener('change', function(e){
+        password = e.target.value;
+      });
+
+      document.getElementById("submit").addEventListener("click", function(){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/getUser", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if(xhr.response == "FUCK U!"){
+              alert("Invalid Username or Password");
+            } else {
+              location.href = "https://google.com";
+            }
+          }
+        }
+        xhr.send(JSON.stringify({
+            name: username,
+            pass: password
+        }));
+      });
+    </script>
+  </body>
+</html>
