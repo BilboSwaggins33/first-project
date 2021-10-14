@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <h1>Submit a Review</h1>
+    <h2>Select a Class</h2>
+    <form autocomplete="off" action="/submit" method="POST">
+      <div class="autocomplete" style="width: 600px">
+        <input id="myInput" type="text" name="class" placeholder="Class" />
+      </div>
+      <div class="categories">
+        <div>
+          <h4 class="heading">Workload</h4>
+          <div class="rateWorkload">
+            <input type="radio" id="star5" name="rateWork" value="5" />
+            <label for="star5" title="text">5</label>
+            <input type="radio" id="star4" name="rateWork" value="4" />
+            <label for="star4" title="text">4</label>
+            <input type="radio" id="star3" name="rateWork" value="3" />
+            <label for="star3" title="text">3</label>
+            <input type="radio" id="star2" name="rateWork" value="2" />
+            <label for="star2" title="text">2</label>
+            <input type="radio" id="star1" name="rateWork" value="1" />
+            <label for="star1" title="text">1</label>
+          </div>
+        </div>
+        <div>
+          <h4 class="heading">Difficulty</h4>
+          <div class="rateDifficulty">
+            <input type="radio" id="star5" name="rateDiff" value="5" />
+            <label for="star5" title="text">5</label>
+            <input type="radio" id="star4" name="rateDiff" value="4" />
+            <label for="star4" title="text">4</label>
+            <input type="radio" id="star3" name="rateDiff" value="3" />
+            <label for="star3" title="text">3</label>
+            <input type="radio" id="star2" name="rateDiff" value="2" />
+            <label for="star2" title="text">2</label>
+            <input type="radio" id="star1" name="rateDiff" value="1" />
+            <label for="star1" title="text">1</label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <textarea
+          id="reviewText"
+          name="text"
+          rows="10"
+          cols="50"
+          placeholder="Write a review"
+        ></textarea>
+      </div>
+      <input type="submit" />
+    </form>
+    <script>
+      var classes = [
+        "English 9",
+        "English 10",
+        "English 11: Global Literacies",
+        "English 11: AP Language",
+        "English 12: AP Literature",
+        "English 12: Advanced Journalism",
+        "English 12: Debate",
+        "English 12: Literary Analysis",
+        "English 12: Mulitliteracies",
+        "English 12: Senior Composition",
+        "English 12: Speech and Interpersonal Communications",
+        "Debate",
+        "Journalism I",
+        "Journalism II",
+        "ESL Intermediate",
+        "ESL Advanced",
+        "Acting I",
+        "Advanced Acting",
+        "Advanced Studio Art",
+        "AP Art History",
+        "AP Music Theory",
+        "Choir",
+        "Directing",
+        "Electronic Music Ensemble",
+        "Intermediate Ceramics",
+        "Orchestra",
+        "Photography",
+        "Piano I",
+        "2D Studio: Drawing, Painting, and Printmaking",
+        "Yearbook: Publications",
+        "Ceramics I",
+        "Electronic Music I",
+        "Foundations in Visual Art",
+        "Glass I",
+        "Public Speaking",
+        "Sculpture",
+        "Theater Technology I",
+        "Woodworking I",
+        "Writing for Performance",
+        "Advanced Music Production",
+        "Ceramics II",
+        "Glass II",
+        "Introductory Printmaking",
+        "Theater Technology II",
+        "Woodworking II",
+        "Arts Concentration",
+        "Global Concentration: Cohort",
+        "Global Concentration: Capstone",
+        "The Art of Disagreement",
+        "The Good Life: An Exploration and Study of Global Happiness",
+        "World History I",
+        "World History II",
+        "AP World History",
+        "U. S. History",
+        "AP U.S. History",
+        "AP Economics",
+        "AP United States and Comparative Government and Politics",
+        "A History of Human Rights in the Americas",
+        "Introductory Economics",
+        "Philosophy: Freedom, Order and Society",
+        "A History of Global Human Rights",
+        "Blood and Sugar: History of Cuba",
+        "Entrepreneurship",
+        "Algebra I",
+        "Geometry",
+        "Geometry Advanced",
+        "Conceptual Algebra II",
+        "Algebra II",
+        "Algebra II/Precalculus Advanced (APA)",
+        "Conceptual Precalculus",
+        "Discrete Math with Applications",
+        "Precalculus",
+        "Calculus",
+        "AP Calculus AB",
+        "AP Calculus BC",
+        "AP Statistics",
+        "Formal Logic",
+        "Multivariable Calculus",
+        "Web Development",
+        "AP Computer Science Principles",
+        "AP Computer Science A",
+        "Chinese I",
+        "Chinese II",
+        "Chinese III",
+        "Chinese IV",
+        "AP Chinese Language and Culture",
+        "Chinese Cultural Studies: Contemporary Society (PAP)",
+        "French I",
+        "French II",
+        "French III",
+        "French IV Advanced",
+        "AP French Language and Culture",
+        "Spanish I",
+        "Spanish II",
+        "Spanish III",
+        "Spanish IV Advanced",
+        "Heritage Spanish: Nuestra identidad global",
+        "AP Spanish Literature and Culture",
+        "Contemporary Civilization and Culture of Latin America (PAP)",
+        "Le Monde Francophone (The French-speaking world) (PAP)",
+        "Advanced Topics in Linguistics: French Phonetics",
+        "Conversación y cultura del mundo hispano (Conversation and Culture of the Hispanic World)",
+        "Advanced Topics in Communication: French Conversation",
+        "Temas actuales del mundo hispano (Current Events of the Hispanic World)",
+        "Latin I",
+        "Latin II",
+        "Latin III",
+        "Latin IV Advanced",
+        "Biology I",
+        "Advanced Biology",
+        "AP Biology",
+        "Bioengineering Research & Design",
+        "Chemistry I",
+        "Advanced Chemistry",
+        "AP Chemistry",
+        "AP Environmental Science",
+        "Physics I",
+        "Advanced Physics",
+        "AP Physics C Mechanics",
+        "AP Physics C Electricity and Magnetism",
+        "Principles of Engineering",
+        "Biochemistry Research I",
+        "Biochemistry Research II",
+        "AP Psychology",
+        "Adolescent Psychology",
+        "Anatomy and Physiology: Foundations",
+        "Introduction to Astronomy",
+        "Forensic Science: Modern Cases",
+        "Anatomy and Physiology: Advanced Systems",
+        "Introduction to Natural Disasters",
+        "Forensic Science: Modern Cases",
+        "Health, Wellness, and Community: 9",
+        "Health, Wellness, and Community: 10",
+        "Health, Wellness, and Community: 11",
+        "Health, Wellness, and Community: 12",
+      ];
+      function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function (e) {
+          var a,
+            b,
+            i,
+            val = this.value;
+          /*close any already open lists of autocompleted values*/
+          closeAllLists();
+          if (!val) {
+            return false;
+          }
+          currentFocus = -1;
+          /*create a DIV element that will contain the items (values):*/
+          a = document.createElement("DIV");
+          a.setAttribute("id", this.id + "autocomplete-list");
+          a.setAttribute("class", "autocomplete-items");
+          /*append the DIV element as a child of the autocomplete container:*/
+          this.parentNode.appendChild(a);
+          /*for each item in the array...*/
+          for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:*/
+            if (
+              arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()
+            ) {
+              /*create a DIV element for each matching element:*/
+              b = document.createElement("DIV");
+              /*make the matching letters bold:*/
+              b.innerHTML =
+                "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+              b.innerHTML += arr[i].substr(val.length);
+              /*insert a input field that will hold the current array item's value:*/
+              b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+              /*execute a function when someone clicks on the item value (DIV element):*/
+              b.addEventListener("click", function (e) {
+                /*insert the value for the autocomplete text field:*/
+                inp.value = this.getElementsByTagName("input")[0].value;
+                /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+                closeAllLists();
+              });
+              a.appendChild(b);
+            }
+          }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function (e) {
+          var x = document.getElementById(this.id + "autocomplete-list");
+          if (x) x = x.getElementsByTagName("div");
+          if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+          } else if (e.keyCode == 38) {
+            //up
+            /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+          } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+              /*and simulate a click on the "active" item:*/
+              if (x) x[currentFocus].click();
+            }
+          }
+        });
+        function addActive(x) {
+          /*a function to classify an item as "active":*/
+          if (!x) return false;
+          /*start by removing the "active" class on all items:*/
+          removeActive(x);
+          if (currentFocus >= x.length) currentFocus = 0;
+          if (currentFocus < 0) currentFocus = x.length - 1;
+          /*add class "autocomplete-active":*/
+          x[currentFocus].classList.add("autocomplete-active");
+        }
+        function removeActive(x) {
+          /*a function to remove the "active" class from all autocomplete items:*/
+          for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+          }
+        }
+        function closeAllLists(elmnt) {
+          /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+          var x = document.getElementsByClassName("autocomplete-items");
+          for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+              x[i].parentNode.removeChild(x[i]);
+            }
+          }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function (e) {
+          closeAllLists(e.target);
+        });
+      }
+      autocomplete(document.getElementById("myInput"), classes);
+    </script>
+  </body>
+</html>
