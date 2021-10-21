@@ -5,11 +5,21 @@
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
   <body>
+    <div class="topnav">
+      <img
+        class="logo"
+        src="https://upload.wikimedia.org/wikipedia/commons/2/29/Lake_Forest_Academy%27s_Logo.png"
+        style="width: 50px; height: 50px"
+      />
+      <a href="/">Home</a>
+      <a href="/view/mostReviewed?sort=mostReviewed">Browse</a>
+      <a href="/review">Review</a>
+    </div>
     <h1>Submit a Review</h1>
-    <h2>Select a Class</h2>
-    <form autocomplete="off" action="/submit" method="POST">
+    <h3>Select a Class</h3>
+    <form id="reviewForm" autocomplete="off" action="/submit" method="POST">
       <div class="autocomplete" style="width: 600px">
-        <input id="myInput" type="text" name="class" placeholder="Class" />
+        <input id="myInput" type="text" name="class" placeholder="Search Class..." />
       </div>
       <div class="categories">
         <div>
@@ -52,7 +62,7 @@
           placeholder="Write a review"
         ></textarea>
       </div>
-      <input type="submit" />
+      <button type="button" onclick="check()">Submit</button>
     </form>
     <script>
       var classes = [
@@ -192,9 +202,35 @@
         "Health, Wellness, and Community: 11",
         "Health, Wellness, and Community: 12",
       ];
+      function check() {
+        let v = document.getElementById("myInput").value;
+        let wv = document.getElementsByName("rateWork");
+        let dv = document.getElementsByName("rateDiff");
+        let checkedW = false;
+        let checkedD = false;
+        for (let i = 0; i < wv.length; i++) {
+          if (wv[i].checked) {
+            checkedW = true;
+          }
+          if (dv[i].checked) {
+            checkedD = true;
+          }
+        }
+        if (
+          classes.indexOf(v) == -1 ||
+          !checkedW ||
+          !checkedD ||
+          document.getElementById("reviewText").value == ""
+        ) {
+          alert("Please select a valid class and fill out the whole form");
+        } else {
+          document.getElementById("reviewForm").submit();
+          //console.log("submitted");
+        }
+      }
       function autocomplete(inp, arr) {
         /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
+      the text field element and an array of possible autocompleted values:*/
         var currentFocus;
         /*execute a function when someone writes in the text field:*/
         inp.addEventListener("input", function (e) {
@@ -217,14 +253,11 @@
           /*for each item in the array...*/
           for (i = 0; i < arr.length; i++) {
             /*check if the item starts with the same letters as the text field value:*/
-            if (
-              arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()
-            ) {
+            if (arr[i].toLowerCase().indexOf(val.toLowerCase()) !== -1) {
               /*create a DIV element for each matching element:*/
               b = document.createElement("DIV");
               /*make the matching letters bold:*/
-              b.innerHTML =
-                "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+              b.innerHTML = arr[i].substr(0, val.length);
               b.innerHTML += arr[i].substr(val.length);
               /*insert a input field that will hold the current array item's value:*/
               b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
@@ -233,7 +266,7 @@
                 /*insert the value for the autocomplete text field:*/
                 inp.value = this.getElementsByTagName("input")[0].value;
                 /*close the list of autocompleted values,
-              (or any other open lists of autocompleted values:*/
+                  (or any other open lists of autocompleted values:*/
                 closeAllLists();
               });
               a.appendChild(b);
@@ -246,14 +279,14 @@
           if (x) x = x.getElementsByTagName("div");
           if (e.keyCode == 40) {
             /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
+            increase the currentFocus variable:*/
             currentFocus++;
             /*and and make the current item more visible:*/
             addActive(x);
           } else if (e.keyCode == 38) {
             //up
             /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
+            decrease the currentFocus variable:*/
             currentFocus--;
             /*and and make the current item more visible:*/
             addActive(x);
@@ -284,7 +317,7 @@
         }
         function closeAllLists(elmnt) {
           /*close all autocomplete lists in the document,
-    except the one passed as an argument:*/
+        except the one passed as an argument:*/
           var x = document.getElementsByClassName("autocomplete-items");
           for (var i = 0; i < x.length; i++) {
             if (elmnt != x[i] && elmnt != inp) {
