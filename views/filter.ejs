@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title></title>
     <link rel="stylesheet" href="/stylesheets/style.css" />
   </head>
@@ -28,7 +29,8 @@
         <option value="leastWorkload" id="leastWorkload">Least Workload</option>
       </select>
     </form>
-    <form id="viewClass" action="/viewreview" method="POST">
+    <form id="viewClass" action="/viewReview" method="POST">
+      <input type="hidden" id="submitData" name="submitData" value=""/>
       <ul style="list-style-type: none" id="reviews" ">
         <% for ( var key in results) {%>
         <li id="card" class="card" >
@@ -40,11 +42,11 @@
         <%}%>
       </ul>
     </form>
-    <script>
-      function getClick(e) {
-        console.log(e.split("\n"));
+    <script>  
+      $(".card").on('click', function() {
+        document.getElementById("submitData").setAttribute("value", $(this)[0].innerText.split("\n")[0])
         document.getElementById("viewClass").submit()
-      }
+      })
       document.getElementById("<%= sortParam%>").selected = "true";
       function getForm() {
         document.getElementById("sortBy").action = document.getElementById("sort").value;

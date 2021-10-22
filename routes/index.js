@@ -17,7 +17,7 @@ router.get("/about", function (req, res, next) {
 });
 
 router.post("/getUser", function (req, res, next) {
-  console.log(req.body);
+  //console.log(req.body);
   if (req.body.name == "titut" && req.body.pass == "12345") {
     res.send("logged in!");
   } else {
@@ -29,9 +29,10 @@ router.get("/review", function (req, res, next) {
   res.render("review");
 });
 
-router.post("/viewreview", function (req, res, next) {
-  console.log(req.body);
-  res.render("viewreview");
+router.post("/viewReview", function (req, res, next) {
+  reviews.find({ class: req.body.submitData }).exec(function (err, docs) {
+    res.render("viewReview", { r: docs });
+  });
 });
 
 router.get("/view/:id", function (req, res, next) {

@@ -95,3 +95,11 @@ textarea {
   font: 16px "Tahoma";
   padding: 10px;
 }
+
+.rating {
+  box-shadow: 0 1px 1px 0 rgba(0.2, 0.2, 0.2, 0.2);
+  width: 500px;
+  padding: 15px;
+  margin-left: -40px;
+  margin-bottom: 10px;
+}
