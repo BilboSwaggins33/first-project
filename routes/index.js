@@ -1,11 +1,64 @@
 var express = require("express");
 var router = express.Router();
+var axios = require("axios");
 var users = require("../schemas/User");
 var reviews = require("../schemas/Review");
+var WordPOS = require("wordpos"),
+  wordpos = new WordPOS();
+var Analyzer = require("natural").SentimentAnalyzer;
+var stemmer = require("natural").PorterStemmer;
+var analyzer = new Analyzer("English", stemmer, "afinn");
 const mongoose = require("mongoose");
+const { json } = require("express");
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index");
+});
+
+router.get("/adjResults", function (req, res, next) {
+  console.log(req.query);
+  reviews.find({}).exec(function (err, docs) {
+    var text = [];
+    docs.forEach(function (x) {
+      wordpos.getPOS(x.text, function (o) {
+        text.push({
+          class: x.class,
+          text: [...o.adverbs, ...o.adjectives, ...o.verbs],
+          sentiment: analyzer.getSentiment(x.text.split(" ")),
+        });
+      });
+    });
+    axios.get("https://api.datamuse.com/words?ml=" + req.query.a + "&max=750&p=adj").then(function (result) {
+      var synonyms = result.data;
+      var slits = [];
+      var match = [];
+      synonyms.forEach(function (x) {
+        slits.push(x.word);
+      });
+      text.forEach(function (a) {
+        match.push({ class: a.class, n: slits.filter((x) => a.text.includes(x)).length, sentiment: a.sentiment });
+      });
+      var final = [];
+      match.forEach(function (a) {
+        if (!this[a.class]) {
+          this[a.class] = { class: a.class, n: 0, sentiment: 0, numReviews: 0, overallVal: 0 };
+          final.push(this[a.class]);
+        }
+        this[a.class].n += a.n;
+        this[a.class].sentiment += a.sentiment;
+        this[a.class].numReviews += 1;
+      }, Object.create(null));
+      final.forEach(function (a) {
+        let ad = analyzer.getSentiment([req.query.a]);
+        a.n = a.n / a.numReviews == 0 ? 1 : a.n / a.numReviews;
+        a.sentiment = a.sentiment / a.numReviews;
+        a.overallVal = Math.abs(ad - a.sentiment) / 2 + 2 / a.n;
+        // console.log("Sentiment Diff:", ad - a.sentiment, "n:", a.n, "n-contr", 2 / a.n, "overall:", a.overallVal);
+      });
+      final = final.sort((a, b) => (a.overallVal > b.overallVal ? 1 : -1));
+      res.render("adjResults", { text: final, synonyms: synonyms });
+    });
+  });
 });
 
 router.get("/about", function (req, res, next) {
@@ -17,7 +70,6 @@ router.get("/about", function (req, res, next) {
 });
 
 router.post("/getUser", function (req, res, next) {
-  //console.log(req.body);
   if (req.body.name == "titut" && req.body.pass == "12345") {
     res.send("logged in!");
   } else {
@@ -36,7 +88,6 @@ router.post("/viewReview", function (req, res, next) {
 });
 
 router.get("/view/:id", function (req, res, next) {
-  //console.log(req.params.id);
   var params = req.params.id;
   reviews.find({}).exec(function (err, docs) {
     var reviewTotals = {};
