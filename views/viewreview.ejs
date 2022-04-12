@@ -1,30 +1,38 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
-  </head>
-  <body>
-    <div class="topnav">
-      <img
-        class="logo"
-        src="https://upload.wikimedia.org/wikipedia/commons/2/29/Lake_Forest_Academy%27s_Logo.png"
-        style="width: 50px; height: 50px"
-      />
-      <a href="/">Home</a>
-      <a href="/view/mostReviewed?sort=mostReviewed">Browse</a>
-      <a href="/review">Review</a>
-    </div>
-    <div>
-      <h2><%= r[0].class%></h2>
-      <ul style="list-style-type: none" class="ratings">
-      <% for (let i =0; i < r.length; i++) {%>
+
+<head>
+  <title></title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <div class="topnav">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/2/29/Lake_Forest_Academy%27s_Logo.png" style="width: 50px; height: 50px" />
+    <a href="/">Home</a>
+    <a href="/view/mostReviewed?sort=mostReviewed">Browse</a>
+    <a href="/review">Review</a>
+  </div>
+  <div>
+    <h2>
+      <%= r[0].class%>
+    </h2>
+
+    <ul style="list-style-type: none" class="ratings">
+      <% for (let i=0; i < r.length; i++) {%>
         <li class="rating">
-          <p>Difficulty: <%=r[i].rateDiff%></p>
-          <p>Workload: <%=r[i].rateWork%></p>
-          <p style="color: #414a4c;"><%=r[i].text%></p>
+          <p>Teacher: <%=r[i].teacher%>
+          </p>
+          <p>Difficulty: <%=r[i].rateDiff%>
+          </p>
+          <p>Workload: <%=r[i].rateWork%>
+          </p>
+          <p style="color: #414a4c;">
+            <%=r[i].text%>
+          </p>
         </li>
         <%}%>
     </ul>
-  </body>
+</body>
+
 </html>

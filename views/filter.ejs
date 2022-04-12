@@ -1,76 +1,99 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
-  </head>
-  <body>
-    <div class="topnav">
-      <img
-        class="logo"
-        src="https://upload.wikimedia.org/wikipedia/commons/2/29/Lake_Forest_Academy%27s_Logo.png"
-        style="width: 50px; height: 50px"
-      />
-      <a href="/">Home</a>
-      <a href="/view/mostReviewed?sort=mostReviewed">Browse</a>
-      <a href="/review">Review</a>
-    </div>
-    <h1>Browse</h1>
-    <input id="myInput" onkeyup="myFunction()" placeholder="Search for class..." />
-    <form id="sortBy" action="/view/" method="GET">
-      <label for="sort">Sort by </label>
-      <select name="sort" id="sort" onchange="getForm()">
-        <option value="mostReviewed" id="mostReviewed">Most Reviewed</option>
-        <option value="leastReviewed" id="leastReviewed">Least Reviewed</option>
-        <option value="Difficult" id="Difficult">Difficulty</option>
-        <option value="leastDifficult" id="leastDifficult">Least Difficult</option>
-        <option value="Workload" id="Workload">Workload</option>
-        <option value="leastWorkload" id="leastWorkload">Least Workload</option>
-      </select>
-    </form>
-    <form id="viewClass" action="/viewReview" method="POST">
-      <input type="hidden" id="submitData" name="submitData" value=""/>
-      <ul style="list-style-type: none" id="reviews" ">
-        <% for ( var key in results) {%>
-        <li id="card" class="card" >
-            <p id="cName" class="info"><%= results[key].class%></p>
-            <p id="revs" class="info"><%= results[key].reviews%> Reviews</p>
-            <p id="info" class="info">Average Difficulty : <%= results[key].diff%></p>
-            <p id="info" class="info">Average Workload : <%= results[key].work%></p>
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <title></title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <div class="topnav">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/2/29/Lake_Forest_Academy%27s_Logo.png" style="width: 50px; height: 50px" />
+    <a href="/">Home</a>
+    <a href="/view/mostReviewed?sort=mostReviewed">Browse</a>
+    <a href="/review">Review</a>
+  </div>
+  <h1>Browse</h1>
+  <input id="cInput" onkeyup="filter(0)" placeholder="Search for course..." />
+  <input id="tInput" onkeyup="filter(1)" placeholder="Search by Teacher..." />
+  <form id="sortBy" action="/view/" method="GET">
+    <label for="sort">Sort by </label>
+    <select name="sort" id="sort" onchange="getForm()">
+      <option value="mostReviewed" id="mostReviewed">Most Reviewed</option>
+      <option value="leastReviewed" id="leastReviewed">Least Reviewed</option>
+      <option value="Difficult" id="Difficult">Difficulty</option>
+      <option value="leastDifficult" id="leastDifficult">Least Difficult</option>
+      <option value="Workload" id="Workload">Workload</option>
+      <option value="leastWorkload" id="leastWorkload">Least Workload</option>
+    </select>
+  </form>
+  <form id="viewClass" action="/viewReview" method="POST">
+    <input type="hidden" id="submitData" name="submitData" value="" />
+    <ul style="list-style-type: none" id="reviews">
+      <% for ( var key in results) {%>
+        <li id="card" class="card">
+          <p id="cName" class="info">
+            <%= results[key].class%>
+          </p>
+          <p id="revs" class="info">
+            <%= results[key].reviews%> Reviews
+          </p>
+          <p id="info" class="info">Average Difficulty : <%= results[key].diff%>
+          </p>
+          <p id="info" class="info">Average Workload : <%= results[key].work%>
+          </p>
         </li>
         <%}%>
-      </ul>
-    </form>
-    <script>  
-      $(".card").on('click', function() {
-        document.getElementById("submitData").setAttribute("value", $(this)[0].innerText.split("\n")[0])
-        document.getElementById("viewClass").submit()
-      })
-      document.getElementById("<%= sortParam%>").selected = "true";
-      function getForm() {
-        document.getElementById("sortBy").action = document.getElementById("sort").value;
-        //console.log(document.getElementById("sortBy").action);
-        document.getElementById("sortBy").submit();
-      }
-      function myFunction() {
-        var input, filter, ul, li, a, i, txtValue;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        ul = document.getElementById("reviews");
-        li = ul.getElementsByTagName("li");
-        for (i = 0; i < li.length; i++) {
-          a = li[i].getElementsByClassName("info")[0];
-          txtValue = a.textContent || a.innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.boxShadow = "";
-            li[i].style.display = "";
-          } else {
-            li[i].style.boxShadow = "none";
-            li[i].style.display = "none";
+    </ul>
+  </form>
+  <script>
+    $(".card").on('click', function () {
+      document.getElementById("submitData").setAttribute("value", $(this)[0].innerText.split("\n")[0])
+      document.getElementById("viewClass").submit()
+    });
+    document.getElementById("<%=sortParam%>").selected = "true";
+    function getForm() {
+      document.getElementById("sortBy").action = document.getElementById("sort").value;
+      document.getElementById("sortBy").submit();
+    }
+
+    const results = "<%= results %>"
+    function filter() {
+      const r = JSON.parse('<%- JSON.stringify(results) %>')
+      var courseInput = document.getElementById("cInput").value.toUpperCase()
+      var teacherInput = document.getElementById("tInput").value.toUpperCase()
+      var filteredList = []
+      function checkTeacher(list) {
+        for (let i in list) {
+          if (list[i].toUpperCase().indexOf(teacherInput) > -1) {
+            return true
           }
         }
+        return false
       }
-    </script>
-  </body>
+      for (let obj in r) {
+        if (r[obj].class.toUpperCase().indexOf(courseInput) > -1 && checkTeacher(r[obj].teacher)) {
+          filteredList.push(r[obj].class.replace(/\s/g, ''))
+        }
+      }
+      ul = document.getElementById("reviews");
+      li = ul.getElementsByTagName("li");
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByClassName("info")[0]
+        var txtValue = a.textContent || a.innerText
+        console.log(txtValue)
+        if (filteredList.includes(txtValue.replace(/\s/g, ''))) {
+          li[i].style.boxShadow = "";
+          li[i].style.display = "";
+        } else {
+          li[i].style.boxShadow = "none";
+          li[i].style.display = "none";
+        }
+      }
+    }
+
+  </script>
+</body>
+
 </html>
