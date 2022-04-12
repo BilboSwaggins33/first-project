@@ -16,7 +16,7 @@ mongodb+srv://titut:<password>@cluster0.acrco.mongodb.net/myFirstDatabase?retryW
 myFirstDatabase --> CHANGE TO DATABASE NAME
 */
 
-var mongoDB = 'mongodb+srv://titut:12345@cluster0.acrco.mongodb.net/FirstMongoDB';
+var mongoDB = 'mongodb+srv://yjin4296:batman1557@cluster0.tjizx.mongodb.net/CS_A_project';
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var db = mongoose.connection;
