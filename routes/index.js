@@ -1,15 +1,14 @@
 var express = require("express");
 var router = express.Router();
 var axios = require("axios");
-var users = require("../schemas/User");
 var reviews = require("../schemas/Review");
 var WordPOS = require("wordpos"),
   wordpos = new WordPOS();
 var Analyzer = require("natural").SentimentAnalyzer;
 var stemmer = require("natural").PorterStemmer;
 var analyzer = new Analyzer("English", stemmer, "afinn");
-const mongoose = require("mongoose");
-const { json } = require("express");
+const teachers = require("../script/teachers.json")
+const array = require("../script/classes.js")
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index");
@@ -73,12 +72,12 @@ router.post("/getUser", function (req, res, next) {
   if (req.body.name == "titut" && req.body.pass == "12345") {
     res.send("logged in!");
   } else {
-    res.send("FUCK U!");
+    res.send("login failed");
   }
 });
 
 router.get("/review", function (req, res, next) {
-  res.render("review");
+  res.render("review", { teachers: teachers, classes: array.classes });
 });
 
 router.post("/viewReview", function (req, res, next) {
@@ -93,8 +92,10 @@ router.get("/view/:id", function (req, res, next) {
     var reviewTotals = {};
     var workTotals = {};
     var diffTotals = {};
+    var teacherTotals = {}
     docs.forEach(function (x) {
       reviewTotals[x.class] = (reviewTotals[x.class] || 0) + 1;
+      Object.keys(teacherTotals).includes(x.class) ? teacherTotals[x.class].push(x.teacher) : teacherTotals[x.class] = [x.teacher]
       if (x.class in workTotals) {
         workTotals[x.class] += parseFloat(x.rateWork);
         diffTotals[x.class] += parseFloat(x.rateDiff);
@@ -113,12 +114,12 @@ router.get("/view/:id", function (req, res, next) {
       countDiff[key] = parseFloat(diffTotals[key] / reviewTotals[key]).toFixed(2);
       counts.push({
         class: key,
+        teacher: teacherTotals[key],
         diff: countDiff[key],
         work: countWork[key],
         reviews: reviewTotals[key],
       });
     }
-    //console.log(counts);
     if (params == "mostReviewed") {
       counts = counts.sort((a, b) => (a.reviews < b.reviews ? 1 : -1));
     } else if (params == "leastReviewed") {
@@ -132,7 +133,6 @@ router.get("/view/:id", function (req, res, next) {
     } else if (params == "leastDifficult") {
       counts = counts.sort((a, b) => (a.diff > b.diff ? 1 : -1));
     }
-
     res.render("filter", {
       results: counts,
       sortParam: params,
@@ -142,7 +142,7 @@ router.get("/view/:id", function (req, res, next) {
 //console.log(revs);
 
 router.post("/submit", function (req, res, next) {
-  //console.log(req.body);
+  console.log(req.body);
   reviews.create(req.body, function (err, small) {
     if (err) return handleError(err);
   });

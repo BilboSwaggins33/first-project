@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title></title>
-    <link rel="stylesheet" href="/stylesheets/style.css" />
-  </head>
-  <body>
-    <div class="topnav">
-      <img
-        class="logo"
-        src="https://upload.wikimedia.org/wikipedia/commons/2/29/Lake_Forest_Academy%27s_Logo.png"
-        style="width: 50px; height: 50px"
-      />
-      <a href="/">Home</a>
-      <a href="/view/mostReviewed?sort=mostReviewed">Browse</a>
-      <a href="/review">Review</a>
-    </div>
-    <div>
-      <h3>Classes that match:</h3>
-      <form id = "viewClass" action="/viewReview" method="POST">
-        <input type="hidden" id="submitData" name="submitData" value=""/>
-        <ul style="list-style-type: none" id="cl" ">
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <title></title>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <div class="topnav">
+    <img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/2/29/Lake_Forest_Academy%27s_Logo.png" style="width: 50px; height: 50px" />
+    <a href="/">Home</a>
+    <a href="/view/mostReviewed?sort=mostReviewed">Browse</a>
+    <a href="/review">Review</a>
+  </div>
+  <div>
+    <h3>Classes that match:</h3>
+    <form id="viewClass" action="/viewReview" method="POST">
+      <input type="hidden" id="submitData" name="submitData" value="" />
+      <ul style="list-style-type: none" id="cl" ">
           <% text.forEach(function (x) {%>
-          <li id="card" class="card" >
-              <p id="cName" class="info"><%=x.class%></p>
-          </li>
-          <%})%>
-        </ul>
-      </form>
-    </div>
-    <script>
-      $(".card").on('click', function() {
-        document.getElementById("submitData").setAttribute("value", $(this)[0].innerText.split("\n")[0])
-        console.log("ok")
-        document.getElementById("viewClass").submit()
-      })
-    </script>
-  </body>
+          <li id=" card" class="card">
+        <p id="cName" class="info">
+          <%=x.class%>
+        </p>
+        <p id="cTeacher" class="info">
+          <%=x.teacher%>
+        </p>
+        </li>
+        <%})%>
+      </ul>
+    </form>
+  </div>
+  <script>
+    $(".card").on('click', function () {
+      document.getElementById("submitData").setAttribute("value", $(this)[0].innerText.split("\n")[0])
+      console.log("ok")
+      document.getElementById("viewClass").submit()
+    })
+  </script>
+</body>
+
 </html>
